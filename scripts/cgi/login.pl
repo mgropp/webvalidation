@@ -110,12 +110,13 @@ sub print_login_page {
 # Handle POST request
 ###
 sub handle_post {
+	my $protocol = ($ENV{'HTTPS'} eq 'on') ? 'https://' : 'http://';
 	eval {
 		User::login(
 			$cgi,
 			$cgi->param('username'),
 			$cgi->param('password'),
-			$website_url_domain . $cgi_web_directory . 'user_space.pl'
+			$protocol . $ENV{'HTTP_HOST'} . $cgi_web_directory . 'user_space.pl'
 		);
 	};
 	if ($@) {
@@ -127,8 +128,9 @@ sub handle_post {
 
 # redirect if the user is already logged in
 if (User::authenticate($cgi)) {
+	my $protocol = ($ENV{'HTTPS'} eq 'on') ? 'https://' : 'http://';
 	print $cgi->redirect(
-		$website_url_domain . $cgi_web_directory . 'user_space.pl'
+		$protocol . $ENV{'HTTP_HOST'} . $cgi_web_directory . 'user_space.pl'
 	);
 }
 # check if the form was submitted

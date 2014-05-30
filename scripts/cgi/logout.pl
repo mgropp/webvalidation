@@ -22,11 +22,12 @@
 
 use strict;
 use CGI::Pretty;
-use Webvalidation qw($website_url_domain $cgi_web_directory);
+use Webvalidation qw($cgi_web_directory);
 use User;
 
 
 my $cgi = new CGI;
 
 # redirect to login page after logging out
-User::logout($cgi, $website_url_domain . $cgi_web_directory . 'login.pl');
+my $protocol = ($ENV{'HTTPS'} eq 'on') ? 'https://' : 'http://';
+User::logout($cgi, $protocol . $ENV{'HTTP_HOST'} . $cgi_web_directory . 'login.pl');
